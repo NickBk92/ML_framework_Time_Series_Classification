@@ -123,17 +123,16 @@ def synthetic_data_generator (name = 'three_class_dataset', dataset_len = 8000, 
     df.to_pickle(name+".pkl")
 
 
-def data_loader(dataset_name= 'three_class_dataset.pkl', split_factor = 0.75):
+def data_loader(dataset_name= 'three_class_dataset.pkl', split_factor = 0.75, batch_size = 8):
     path = Path(os.getcwd())
     dataset = pd.read_pickle(path / dataset_name)
     dataset_len = len(dataset)
     checkpoint = int(split_factor*(dataset_len/4))
+    suffle_buffer_size = 50
 
-    x_test = []
-    y_test = []
-    signal_length= np.shape(dataset[0][0])
+    signal_length=len(dataset[0][0])
     num_classes = 3
-    input_shape = signal_length
+    input_shape = (signal_length,1)
     x_train = []
     y_train = []
     for i in range(0, checkpoint):
@@ -149,3 +148,26 @@ def data_loader(dataset_name= 'three_class_dataset.pkl', split_factor = 0.75):
     x_train = x_train.reshape(-1, signal_length, 1)
     y_train = np.asarray(y_train)
     y_train = np_utils.to_categorical(y_train)
+
+    x_test = []
+    y_test = []
+    for i in range(checkpoint, int(dataset_len/4)):
+        x_test.append(dataset[0][i].T)
+        y_test.append(0)
+        x_test.append(dataset[0][i + int(dataset_len / 4)].T)
+        y_test.append(1)
+        x_test.append(dataset[0][i + 2 * int(dataset_len / 4)].T)
+        y_test.append(2)
+        x_test.append(dataset[0][i + 3 * int(dataset_len / 4)].T)
+        y_test.append(2)
+    x_test = np.asarray(x_test, dtype=np.float32)
+    x_test = x_test.reshape(-1, signal_length, 1)
+    y_test = np.asarray(y_test)
+    y_test = np_utils.to_categorical(y_test)
+
+    train_dataset = tf.data.Dataset.from_tensor_slices((x_train, y_train))
+    test_dataset = tf.data.Dataset.from_tensor_slices((x_test, y_test))
+    train_dataset = train_dataset.shuffle(suffle_buffer_size).batch(batch_size)
+    test_dataset = test_dataset.batch(batch_size)
+
+    return train_dataset, test_dataset;
