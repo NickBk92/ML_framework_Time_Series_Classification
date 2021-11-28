@@ -2,6 +2,11 @@ import functions as f
 import argparse
 from argparse import RawTextHelpFormatter
 from sys import argv
+import warnings
+import matplotlib.pyplot as plt
+
+with warnings.catch_warnings():
+    warnings.filterwarnings("ignore", category=DeprecationWarning)
 # f.synthetic_data_generator()
 # train,test = f.data_loader()
 
@@ -31,6 +36,8 @@ if __name__ == '__main__':
         print(model.summary())
         history = model.train()
         print('Model is Trained')
+        model.validate()
+        model.insights()
     elif args.mode == 'Data':
         print('Data mode on')
         f.synthetic_data_generator()
@@ -41,3 +48,5 @@ if __name__ == '__main__':
         history = model.train()
     elif args.mode == 'HMM':
         print('HMM mode on')
+    
+    plt.show()

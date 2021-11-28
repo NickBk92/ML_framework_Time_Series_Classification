@@ -31330,3 +31330,8 @@ venv_TSC/share/man/man1/ttx.1
 .idea/inspectionProfiles/profiles_settings.xml
 __pycache__/functions.cpython-38.pyc
 __pycache__/test_f.cpython-38.pyc
+venv_TSC/lib/python3.8/site-packages/sklearn-0.0.dist-info/INSTALLER
+venv_TSC/lib/python3.8/site-packages/sklearn-0.0.dist-info/METADATA
+venv_TSC/lib/python3.8/site-packages/sklearn-0.0.dist-info/RECORD
+venv_TSC/lib/python3.8/site-packages/sklearn-0.0.dist-info/top_level.txt
+venv_TSC/lib/python3.8/site-packages/sklearn-0.0.dist-info/WHEEL
